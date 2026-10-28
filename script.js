@@ -1,6 +1,6 @@
 
 const getLocation = async () => {
-  const response = await fetch("https://ipapi.co/json/");
+  const response = await fetch("http://ip-api.com/json/?fields=status,country,city,lat,lon,timezone");
 
   if (!response.ok) {
     throw new Error("Failed to get location");
