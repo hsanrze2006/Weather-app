@@ -1,20 +1,27 @@
-const getLocation = async () => {
-  const response = await fetch(
-    "http://ip-api.com/json/?fields=country,city,lat,lon,timezone",
-  );
+//
+const getLocation = () => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocation is not supported"));
+      return;
+    }
 
-  if (!response.ok) {
-    throw new Error("Failed to get location");
-  }
-
-  const data = await response.json();
-
-  return {
-    city: data.city,
-    lat: data.lat,
-    lon: data.lon,
-    timezone: data.timezone,
-  };
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        });
+      },
+      (error) => reject(error),
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 300000,
+      },
+    );
+  });
 };
 
 const getWeather = async (lat, lon) => {
@@ -87,10 +94,7 @@ const weekdays = document.querySelector(".weekdays");
 
 window.addEventListener("load", async () => {
   getLocation().then((location) => {
-    cityName.textContent = location.city;
-    console.log(location);
-    console.log(location.lat);
-    console.log(location.lon);
+    cityName.textContent = location.timezone;
     getWeather(location.lat, location.lon).then((weather) => {
       const weatherTemp = weather.main.temp;
       const weatherIcon = weather.weather[0].icon;
