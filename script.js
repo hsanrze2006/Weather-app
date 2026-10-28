@@ -33,18 +33,64 @@ const getWeather = async (lat, lon) => {
 };
 
 function geticon(icon) {
-  let setIcon;
   switch (icon) {
-    case "01n":
-      setIcon = "assets/svg/animated/night.svg";
-      break;
+    // Clear sky
     case "01d":
-      setIcon = "assets/svg/animated/day.svg";
+      return "assets/svg/animated/day.svg";
+    case "01n":
+      return "assets/svg/animated/night.svg";
+
+    // Few clouds
+    case "02d":
+      return "assets/svg/animated/cloudy-day-1.svg";
+    case "02n":
+      return "assets/svg/animated/cloudy-night-1.svg";
+
+    // Scattered clouds
+    case "03d":
+      return "assets/svg/animated/cloudy-day-2.svg";
+    case "03n":
+      return "assets/svg/animated/cloudy-night-2.svg";
+
+    // Broken clouds
+    case "04d":
+      return "assets/svg/animated/cloudy.svg";
+    case "04n":
+      return "assets/svg/animated/cloudy.svg";
+
+    // Shower rain
+    case "09d":
+      return "assets/svg/animated/rainy-7.svg";
+    case "09n":
+      return "assets/svg/animated/rainy-6.svg";
+
+    // Rain
+    case "10d":
+      return "assets/svg/animated/rainy-3.svg";
+    case "10n":
+      return "assets/svg/animated/rainy-6.svg";
+
+    // Thunderstorm
+    case "11d":
+      return "assets/svg/animated/thunder.svg";
+    case "11n":
+      return "assets/svg/animated/thunder.svg";
+
+    // Snow
+    case "13d":
+      return "assets/svg/animated/snowy-3.svg";
+    case "13n":
+      return "assets/svg/animated/snowy-6.svg";
+
+    // Mist, fog, haze
+    case "50d":
+      return "assets/svg/animated/fog.svg";
+    case "50n":
+      return "assets/svg/animated/fog.svg";
+
     default:
-      setIcon = "weather.svg";
-      break;
+      return "assets/svg/animated/cloudy.svg";
   }
-  return setIcon;
 }
 
 function getDayOrNight() {
