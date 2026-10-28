@@ -1,6 +1,7 @@
-
 const getLocation = async () => {
-  const response = await fetch("http://ip-api.com/json/?fields=status,country,city,lat,lon,timezone");
+  const response = await fetch(
+    "http://ip-api.com/json/?fields=country,city,lat,lon,timezone",
+  );
 
   if (!response.ok) {
     throw new Error("Failed to get location");
@@ -10,63 +11,33 @@ const getLocation = async () => {
 
   return {
     city: data.city,
-    lat: data.latitude,
-    lon: data.longitude,
-    timezone: data.timezone
+    lat: data.lat,
+    lon: data.lon,
+    timezone: data.timezone,
   };
 };
 
-
 const getWeather = async (lat, lon) => {
-  const api = "2e3977592e2b9cdda447ec3091330103";
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
+  api = "2e3977592e2b9cdda447ec3091330103";
+  url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
 };
 
 function geticon(icon) {
-  // OpenWeatherMap icon codes: d = day, n = night
-  const icons = {
-    // Clear sky
-    "01d": "assets/svg/animated/day.svg",
-    "01n": "assets/svg/animated/night.svg",
-
-    // Few clouds
-    "02d": "assets/svg/animated/cloudy-day-1.svg",
-    "02n": "assets/svg/animated/cloudy-night-1.svg",
-
-    // Scattered clouds
-    "03d": "assets/svg/animated/cloudy-day-2.svg",
-    "03n": "assets/svg/animated/cloudy-night-2.svg",
-
-    // Broken / overcast clouds
-    "04d": "assets/svg/animated/cloudy.svg",
-    "04n": "assets/svg/animated/cloudy.svg",
-
-    // Shower rain
-    "09d": "assets/svg/animated/rainy-7.svg",
-    "09n": "assets/svg/animated/rainy-3.svg",
-
-    // Rain
-    "10d": "assets/svg/animated/rainy-5.svg",
-    "10n": "assets/svg/animated/rainy-6.svg",
-
-    // Thunderstorm
-    "11d": "assets/svg/animated/thunder.svg",
-    "11n": "assets/svg/animated/thunder.svg",
-
-    // Snow
-    "13d": "assets/svg/animated/snowy-5.svg",
-    "13n": "assets/svg/animated/snowy-6.svg",
-
-    // Mist, fog, haze, smoke, etc.
-    "50d": "assets/svg/animated/fog.svg",
-    "50n": "assets/svg/animated/fog.svg",
-  };
-
-  // Use a valid existing icon for unknown or missing codes.
-  return icons[icon] ?? "assets/svg/animated/cloudy.svg";
+  let setIcon;
+  switch (icon) {
+    case "01n":
+      setIcon = "assets/svg/animated/night.svg";
+      break;
+    case "01d":
+      setIcon = "assets/svg/animated/day.svg";
+    default:
+      setIcon = "weather.svg";
+      break;
+  }
+  return setIcon;
 }
 
 function getDayOrNight() {
@@ -117,13 +88,16 @@ const weekdays = document.querySelector(".weekdays");
 window.addEventListener("load", async () => {
   getLocation().then((location) => {
     cityName.textContent = location.city;
+    console.log(location);
+    console.log(location.lat);
+    console.log(location.lon);
     getWeather(location.lat, location.lon).then((weather) => {
       const weatherTemp = weather.main.temp;
       const weatherIcon = weather.weather[0].icon;
       const weatherDescription = weather.weather[0].description;
+      console.log(weatherIcon);
 
-      const iconName = geticon(weatherIcon);
-      image.src = iconName;
+      image.src = geticon(weatherIcon);
 
       degree.textContent = `${Math.floor(weatherTemp - 273.15)}°`;
       description.textContent = weatherDescription;
