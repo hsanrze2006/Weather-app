@@ -1,10 +1,21 @@
+
 const getLocation = async () => {
-  const url =
-    "http://ip-api.com/json/?fields=status,country,city,lat,lon,timezone";
-  const response = await fetch(url);
+  const response = await fetch("https://ipapi.co/json/");
+
+  if (!response.ok) {
+    throw new Error("Failed to get location");
+  }
+
   const data = await response.json();
-  return data;
+
+  return {
+    city: data.city,
+    lat: data.latitude,
+    lon: data.longitude,
+    timezone: data.timezone
+  };
 };
+
 
 const getWeather = async (lat, lon) => {
   const api = "2e3977592e2b9cdda447ec3091330103";
